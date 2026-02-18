@@ -27,6 +27,10 @@ jobs:
         run: |
           for i in {1..30}; do curl -sS -o /dev/null http://127.0.0.1:5002 && exit 0 || sleep 5; done; exit 1
 
+      - name: Initialize database
+        run: |
+          curl -sS -X GET http://127.0.0.1:5002/createdb
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
