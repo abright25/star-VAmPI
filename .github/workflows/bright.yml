@@ -25,9 +25,9 @@ jobs:
           tokentimetolive: 60
           vulnerable: 1
 
-      # - name: Seed test users
-      #   run: |
-      #     docker exec vampi-vulnerable python scripts/seed_test_users.py
+      - name: Seed test users
+        run: |
+          docker exec vampi-vulnerable python scripts/seed_test_users.py
 
       - name: Probe application readiness
         run: |
