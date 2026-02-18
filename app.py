@@ -11,6 +11,9 @@ vuln = int(os.getenv('vulnerable', 1))
 # token alive for how many seconds?
 alive = int(os.getenv('tokentimetolive', 60))
 
+from models.user_model import User
+with vuln_app.app.app_context():
+    User.init_db_users()
 
 # start the app with port 5000 and debug on!
 if __name__ == '__main__':
