@@ -25,6 +25,10 @@ jobs:
           tokentimetolive: 60
           vulnerable: 1
 
+      - name: Seed test users
+        run: |
+          docker exec vampi-vulnerable python scripts/seed_test_users.py
+
       - name: Probe application readiness
         run: |
           for i in {1..30}; do curl -sS -o /dev/null http://127.0.0.1:5002 && exit 0 || sleep 5; done; exit 1
