@@ -6,7 +6,7 @@ services:
   ports:
    - 5000:5000
   environment:
-   - vulnerable=0
+   - vulnerable=1
 
  #vampi-vulnerable:
  # build: ./
