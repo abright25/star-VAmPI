@@ -21,5 +21,4 @@ def custom_401(error):
     response.status_code = 401
     return response
 
-
-vuln_app.add_api('openapi3.yml')
+# vuln_app.add_api('openapi3.yml')
