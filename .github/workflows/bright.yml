@@ -23,6 +23,9 @@ jobs:
         run: |
           docker compose up --wait
 
+      - name: Seed Test User
+        run: docker exec vampi-vulnerable python database/seed_test_user.py
+
       - name: Probe Application Readiness
         run: |
           for i in {1..30}; do curl -sS -o /dev/null http://127.0.0.1:5002 && exit 0 || sleep 5; done; exit 1
