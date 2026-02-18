@@ -7,6 +7,7 @@ services:
    - 5001:5000
   environment:
    - vulnerable=0
+   - tokentimetolive=60
 
  vampi-vulnerable:
   build: ./
