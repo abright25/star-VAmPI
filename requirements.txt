@@ -7,3 +7,4 @@ swagger-ui-bundle
 PyJWT==2.6.0
 markupsafe==2.1.2
 requests
+logging
