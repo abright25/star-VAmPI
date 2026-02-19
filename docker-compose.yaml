@@ -7,3 +7,9 @@ services:
    - 5002:5000
   environment:
    - vulnerable=1
+   - tokentimetolive=60
+  healthcheck:
+    test: ["CMD", "curl", "-f", "http://localhost:5000"]
+    interval: 10s
+    timeout: 5s
+    retries: 5
