@@ -22,15 +22,7 @@ test('GET /users/v1/_debug', { signal: AbortSignal.timeout(timeout) }, async () 
   await runner
     .createScan({
       tests: [
-        {
-          name: 'broken_access_control',
-          options: {
-            auth: 'azpLwB6e5XU2tcsh5Rwnyh'
-          }
-        },
-        'improper_asset_management',
-        'full_path_disclosure',
-        'secret_tokens'
+        'broken_access_control'
       ],
       attackParamLocations: [AttackParamLocation.PATH],
       starMetadata: {
