@@ -52,7 +52,11 @@ def get_by_username(username):
 def register_user():
     request_data = request.get_json()
     # check if user already exists
-    user = User.query.filter_by(username=request_data.get('username')).first()
+    try:
+        user = User.query.filter_by(username=request_data.get('username')).first()
+    except Exception as e:
+        return Response(error_message_helper("An error occurred while accessing the database."), 500, mimetype="application/json")
+
     if not user:
         try:
             # validate the data are in the correct form
@@ -62,11 +66,11 @@ def register_user():
                     admin = True
                 else:
                     admin = False
-                user = User(username=request_data['username'], password=request_data['password'],
-                            email=request_data['email'], admin=admin)
+                user = User(username=escape(request_data['username']), password=request_data['password'],
+                            email=escape(request_data['email']), admin=admin)
             else:
-                user = User(username=request_data['username'], password=request_data['password'],
-                            email=request_data['email'])
+                user = User(username=escape(request_data['username']), password=request_data['password'],
+                            email=escape(request_data['email']))
             db.session.add(user)
             db.session.commit()
 
