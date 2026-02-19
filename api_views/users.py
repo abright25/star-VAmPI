@@ -17,8 +17,11 @@ def error_message_helper(msg):
 
 
 def get_all_users():
-    return_value = jsonify({'users': User.get_all_users()})
-    return return_value
+    try:
+        return_value = jsonify({'users': User.get_all_users()})
+        return return_value
+    except Exception as e:
+        return Response(error_message_helper("An error occurred while fetching users."), 500, mimetype="application/json")
 
 
 def debug():
@@ -142,81 +145,4 @@ def update_email(username):
         user = User.query.filter_by(username=resp['sub']).first()
         if vuln:  # Regex DoS
             match = re.search(
-                r"^([0-9a-zA-Z]([-.\w]*[0-9a-zA-Z])*@{1}([0-9a-zA-Z][-\w]*[0-9a-zA-Z]\.)+[a-zA-Z]{2,9})$",
-                str(request_data.get('email')))
-            if match:
-                user.email = request_data.get('email')
-                db.session.commit()
-                responseObject = {
-                    'status': 'success',
-                    'data': {
-                        'username': user.username,
-                        'email': user.email
-                    }
-                }
-                return Response(json.dumps(responseObject), 204, mimetype="application/json")
-            else:
-                return Response(error_message_helper("Please Provide a valid email address."), 400,
-                                mimetype="application/json")
-        else:
-            regex = '^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
-            if (re.search(regex, request_data.get('email'))):
-                user.email = request_data.get('email')
-                db.session.commit()
-                responseObject = {
-                    'status': 'success',
-                    'data': {
-                        'username': user.username,
-                        'email': user.email
-                    }
-                }
-                return Response(json.dumps(responseObject), 204, mimetype="application/json")
-            else:
-                return Response(error_message_helper("Please Provide a valid email address."), 400,
-                                mimetype="application/json")
-
-
-def update_password(username):
-    request_data = request.get_json()
-    resp = token_validator(request.headers.get('Authorization'))
-    if "error" in resp:
-        return Response(error_message_helper(resp), 401, mimetype="application/json")
-    else:
-        if request_data.get('password'):
-            if vuln:  # Unauthorized update of password of another user
-                user = User.query.filter_by(username=username).first()
-                if user:
-                    user.password = request_data.get('password')
-                    db.session.commit()
-                else:
-                    return Response(error_message_helper("User Not Found"), 400, mimetype="application/json")
-            else:
-                user = User.query.filter_by(username=resp['sub']).first()
-                user.password = request_data.get('password')
-                db.session.commit()
-            responseObject = {
-                'status': 'success',
-                'Password': 'Updated.'
-            }
-            return Response(json.dumps(responseObject), 204, mimetype="application/json")
-        else:
-            return Response(error_message_helper("Malformed Data"), 400, mimetype="application/json")
-
-
-def delete_user(username):
-    resp = token_validator(request.headers.get('Authorization'))
-    if "error" in resp:
-        return Response(error_message_helper(resp), 401, mimetype="application/json")
-    else:
-        user = User.query.filter_by(username=resp['sub']).first()
-        if user.admin:
-            if bool(User.delete_user(username)):
-                responseObject = {
-                    'status': 'success',
-                    'message': 'User deleted.'
-                }
-                return Response(json.dumps(responseObject), 200, mimetype="application/json")
-            else:
-                return Response(error_message_helper("User not found!"), 404, mimetype="application/json")
-        else:
-            return Response(error_message_helper("Only Admins may delete users!"), 401, mimetype="application/json")
+                r"^([0-9a-zA-Z]([-.\w]*[0-9a-zA-Z])*@{1}([0-9a-zA-Z][-\

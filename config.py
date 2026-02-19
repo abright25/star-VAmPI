@@ -21,5 +21,11 @@ def custom_401(error):
     response.status_code = 401
     return response
 
+@vuln_app.app.errorhandler(Exception)
+def handle_exception(e):
+    # Handle all other exceptions
+    response = jsonify({"status": "error", "message": "An unexpected error occurred."})
+    response.status_code = 500
+    return response
 
 vuln_app.add_api('openapi3.yml')

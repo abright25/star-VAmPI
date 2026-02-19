@@ -65,7 +65,10 @@ class User(db.Model):
 
     @staticmethod
     def get_all_users():
-        return [User.json(user) for user in User.query.all()]
+        try:
+            return [User.json(user) for user in User.query.all()]
+        except Exception as e:
+            return {'error': 'An error occurred while fetching users.'}
 
     @staticmethod
     def get_all_users_debug():
