@@ -1,0 +1,48 @@
+import { test, before, after } from 'node:test';
+import { SecRunner } from '@sectester/runner';
+import { AttackParamLocation, HttpMethod } from '@sectester/scan';
+
+const timeout = 40 * 60 * 1000;
+const baseUrl = process.env.BRIGHT_TARGET_URL!;
+
+let runner!: SecRunner;
+
+before(async () => {
+  runner = new SecRunner({
+    hostname: process.env.BRIGHT_HOSTNAME!,
+    projectId: process.env.BRIGHT_PROJECT_ID!
+  });
+
+  await runner.init();
+});
+
+after(() => runner.clear());
+
+test('GET /users/v1/_debug', { signal: AbortSignal.timeout(timeout) }, async () => {
+  await runner
+    .createScan({
+      tests: [
+        {
+          name: 'broken_access_control',
+          options: {
+            auth: 'azpLwB6e5XU2tcsh5Rwnyh'
+          }
+        },
+        'improper_asset_management',
+        'full_path_disclosure'
+      ],
+      attackParamLocations: [AttackParamLocation.PATH],
+      starMetadata: {
+        code_source: 'abright25/star-VAmPI:master',
+        databases: ['SQLAlchemy'],
+        user_roles: ['admin']
+      },
+      poolSize: +process.env.SECTESTER_SCAN_POOL_SIZE || undefined
+    })
+    .setFailFast(false)
+    .timeout(timeout)
+    .run({
+      method: HttpMethod.GET,
+      url: `${baseUrl}/users/v1/_debug`
+    });
+});
