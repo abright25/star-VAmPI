@@ -33,7 +33,11 @@ test('GET /users/v1/_debug', { signal: AbortSignal.timeout(timeout) }, async () 
       poolSize: +process.env.SECTESTER_SCAN_POOL_SIZE || undefined,
       auth: {
         type: 'custom',
-        headers: { 'Authorization': 'Bearer <token>' }
+        objects: [
+          {
+            headers: { 'Authorization': `Bearer ${process.env.BRIGHT_AUTH_TOKEN}` }
+          }
+        ]
       }
     })
     .setFailFast(false)
