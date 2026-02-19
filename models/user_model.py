@@ -65,7 +65,10 @@ class User(db.Model):
 
     @staticmethod
     def get_all_users():
-        return [User.json(user) for user in User.query.all()]
+        try:
+            return [User.json(user) for user in User.query.all()]
+        except Exception as e:
+            return {'error': 'An error occurred while fetching users.'}
 
     @staticmethod
     def get_all_users_debug():
@@ -73,34 +76,48 @@ class User(db.Model):
 
     @staticmethod
     def get_user(username):
-        if vuln:  # SQLi Injection
-            user_query = f"SELECT * FROM users WHERE username = '{username}'"
-            query = db.session.execute(text(user_query))
-            ret = query.fetchone()
-            if ret:
-                fin_query = '{"username": "%s", "email": "%s"}' % (ret[1], ret[3])
+        try:
+            if vuln:  # SQLi Injection
+                user_query = f"SELECT * FROM users WHERE username = '{username}'"
+                query = db.session.execute(text(user_query))
+                ret = query.fetchone()
+                if ret:
+                    fin_query = '{"username": "%s", "email": "%s"}' % (ret[1], ret[3])
+                else:
+                    fin_query = None
             else:
-                fin_query = None
-        else:
-            fin_query = User.query.filter_by(username=username).first()
-        return fin_query
+                fin_query = User.query.filter_by(username=username).first()
+            return fin_query
+        except Exception as e:
+            return {'error': 'An error occurred while fetching the user.'}
 
     @staticmethod
     def register_user(username, password, email, admin=False):
-        new_user = User(username=username, password=password, email=email, admin=admin)
-        randomint = str(randrange(100))
-        new_user.books = [Book(book_title="bookTitle" + randomint, secret_content="secret for bookTitle" + randomint)]
-        db.session.add(new_user)
-        db.session.commit()
+        try:
+            new_user = User(username=username, password=password, email=email, admin=admin)
+            randomint = str(randrange(100))
+            new_user.books = [Book(book_title="bookTitle" + randomint, secret_content="secret for bookTitle" + randomint)]
+            db.session.add(new_user)
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            return {'error': 'An error occurred while registering the user.'}
 
     @staticmethod
     def delete_user(username):
-        done = User.query.filter_by(username=username).delete()
-        db.session.commit()
-        return done
+        try:
+            done = User.query.filter_by(username=username).delete()
+            db.session.commit()
+            return done
+        except Exception as e:
+            db.session.rollback()
+            return {'error': 'An error occurred while deleting the user.'}
 
     @staticmethod
     def init_db_users():
-        User.register_user("name1", "pass1", "mail1@mail.com", False)
-        User.register_user("name2", "pass2", "mail2@mail.com", False)
-        User.register_user("admin", "pass1", "admin@mail.com", True)
+        try:
+            User.register_user("name1", "pass1", "mail1@mail.com", False)
+            User.register_user("name2", "pass2", "mail2@mail.com", False)
+            User.register_user("admin", "pass1", "admin@mail.com", True)
+        except Exception as e:
+            return {'error': 'An error occurred while initializing the database.'}
