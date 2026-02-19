@@ -19,7 +19,7 @@ jobs:
 
       - name: Start application
         run: |
-          docker compose up -d
+          docker compose up -d vampi-vulnerable
         env:
           tokentimetolive: 60
           vulnerable: 1
