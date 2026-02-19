@@ -15,4 +15,5 @@ alive = int(os.getenv('tokentimetolive', 60))
 # start the app with port 5000 and debug on!
 if __name__ == '__main__':
     port = int(os.getenv('PORT', 5000))
-    vuln_app.run(host='0.0.0.0', port=port, debug=True)
+    # Set debug to False to prevent full path disclosure
+    vuln_app.run(host='0.0.0.0', port=port, debug=False)

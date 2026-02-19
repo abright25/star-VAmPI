@@ -21,5 +21,11 @@ def custom_401(error):
     response.status_code = 401
     return response
 
+# Add a generic error handler for 500 Internal Server Error
+@vuln_app.app.errorhandler(500)
+def handle_500(error):
+    response = jsonify({"status": "error", "message": "An internal error occurred. Please try again later."})
+    response.status_code = 500
+    return response
 
 vuln_app.add_api('openapi3.yml')
