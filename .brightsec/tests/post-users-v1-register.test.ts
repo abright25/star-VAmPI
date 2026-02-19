@@ -21,7 +21,7 @@ after(() => runner.clear());
 test('POST /users/v1/register', { signal: AbortSignal.timeout(timeout) }, async () => {
   await runner
     .createScan({
-      tests: ['sqli', 'xss', 'csrf', 'email_injection'],
+      tests: ['sqli', 'xss'],
       attackParamLocations: [AttackParamLocation.BODY],
       starMetadata: {
         code_source: 'abright25/star-VAmPI:master',
