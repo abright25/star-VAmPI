@@ -26,7 +26,7 @@ jobs:
 
       - name: Wait for application to be ready
         run: |
-          for i in {1..30}; do curl -sS -o /dev/null http://127.0.0.1:5001 && exit 0 || sleep 5; done; exit 1
+          for i in {1..30}; do curl -sS -o /dev/null http://127.0.0.1:5002 && exit 0 || sleep 5; done; exit 1
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -53,5 +53,5 @@ jobs:
           BRIGHT_AUTH_ID: azpLwB6e5XU2tcsh5Rwnyh
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BRIGHT_TOKEN: ${{ env.BRIGHT_TOKEN }}
-          BRIGHT_TARGET_URL: http://127.0.0.1:5001
+          BRIGHT_TARGET_URL: http://127.0.0.1:5002
           SECTESTER_SCAN_POOL_SIZE: ${{ vars.SECTESTER_SCAN_POOL_SIZE }}
