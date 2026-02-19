@@ -13,5 +13,4 @@ COPY --from=builder /usr/local/bin /usr/local/bin
 ENV vulnerable=1
 ENV tokentimetolive=60
 
-ENTRYPOINT ["python"]
-CMD ["app.py"]
+CMD ["python", "app.py"]
