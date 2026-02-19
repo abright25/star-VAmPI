@@ -30,7 +30,11 @@ test('GET /users/v1/_debug', { signal: AbortSignal.timeout(timeout) }, async () 
         databases: ['SQLAlchemy'],
         user_roles: ['admin']
       },
-      poolSize: +process.env.SECTESTER_SCAN_POOL_SIZE || undefined
+      poolSize: +process.env.SECTESTER_SCAN_POOL_SIZE || undefined,
+      auth: {
+        type: 'custom',
+        headers: { 'Authorization': 'Bearer <token>' }
+      }
     })
     .setFailFast(false)
     .timeout(timeout)
