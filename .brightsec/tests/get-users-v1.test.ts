@@ -38,7 +38,16 @@ test('GET /users/v1', { signal: AbortSignal.timeout(timeout) }, async () => {
             headers: { 'Authorization': `Bearer ${process.env.BRIGHT_AUTH_TOKEN}` }
           }
         ]
-      }
+      },
+      customAuthObjects: [
+        {
+          loginEndpoint: `${baseUrl}/auth/login`,
+          method: 'POST',
+          body: { username: process.env.BRIGHT_USERNAME, password: process.env.BRIGHT_PASSWORD },
+          tokenPath: 'token',
+          headers: { 'Content-Type': 'application/json' }
+        }
+      ]
     })
     .setFailFast(false)
     .timeout(timeout)
