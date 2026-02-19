@@ -1,0 +1,9 @@
+version: "3"
+services:
+ vampi-vulnerable:
+  build: ./
+  container_name: vampi-vulnerable
+  ports:
+   - 5002:5000
+  environment:
+   - vulnerable=1
