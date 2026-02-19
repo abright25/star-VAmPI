@@ -17,13 +17,30 @@ def error_message_helper(msg):
 
 
 def get_all_users():
-    return_value = jsonify({'users': User.get_all_users()})
-    return return_value
+    resp = token_validator(request.headers.get('Authorization'))
+    if "error" in resp:
+        return Response(error_message_helper(resp), 401, mimetype="application/json")
+    else:
+        user = User.query.filter_by(username=resp['sub']).first()
+        if user.admin:
+            return_value = jsonify({'users': User.get_all_users()})
+            return return_value
+        else:
+            return Response(error_message_helper("Access denied: Admins only."), 403, mimetype="application/json")
 
 
 def debug():
-    return_value = jsonify({'users': User.get_all_users_debug()})
-    return return_value
+    # Ensure only admin users can access the debug endpoint
+    resp = token_validator(request.headers.get('Authorization'))
+    if "error" in resp:
+        return Response(error_message_helper(resp), 401, mimetype="application/json")
+    else:
+        user = User.query.filter_by(username=resp['sub']).first()
+        if user.admin:
+            return_value = jsonify({'users': User.get_all_users_debug()})
+            return return_value
+        else:
+            return Response(error_message_helper("Access denied: Admins only."), 403, mimetype="application/json")
 
 def me():
     resp = token_validator(request.headers.get('Authorization'))
